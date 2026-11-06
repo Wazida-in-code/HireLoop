@@ -13,20 +13,13 @@ const links = [
   { label: "Pricing", href: "/pricing" },
 ];
 
-const headerStyle = {
-  backgroundColor: "#2c1d1d",
-  backgroundImage:
-    "repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 44px, rgba(0,0,0,0.05) 44px 88px)",
-};
-
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
 
   return (
     <header
-      className="sticky top-0 z-50 border-b border-white/5"
-      style={headerStyle}
+      className="striped-dark sticky top-0 z-50 border-b border-white/5"
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link href="/" aria-label="HireLoop home" onClick={closeMenu}>

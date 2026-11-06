@@ -4,6 +4,17 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Dark maroon bar with subtle vertical stripes — shared by the navbar and hero
+   so the stripe pattern lines up across sections. */
+@utility striped-dark {
+    background-color: #2c1d1d;
+    background-image: repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.03) 0 44px,
+        rgba(0, 0, 0, 0.05) 44px 88px
+    );
+}
+
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: var(--font-sans);
