@@ -2,7 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
+import { Briefcase, Eye, EyeOff, ShieldCheck, User } from "lucide-react";
+import type { Role } from "@/lib/roles";
 
 type AuthMode = "sign-in" | "sign-up";
 
@@ -10,6 +11,7 @@ export type AuthFormData = {
   name?: string;
   email: string;
   password: string;
+  role?: Role;
 };
 
 type Field = {
@@ -67,12 +69,17 @@ const fieldsByMode: Record<AuthMode, Field[]> = {
   ],
 };
 
+const roles = [
+  { value: "seeker", label: "Job Seeker", icon: User },
+  { value: "recruiter", label: "Recruiter", icon: Briefcase },
+  { value: "admin", label: "Admin", icon: ShieldCheck },
+] as const;
+
 export default function AuthForm({ mode , onSubmit}: AuthFormDataProps) {
   const isSignIn = mode === "sign-in";
-  const [submitted, setSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Placeholder: collects the form data now, real auth wiring comes later.
+  // Delegates to the page-provided onSubmit handler (better-auth calls live there).
  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -164,18 +171,38 @@ export default function AuthForm({ mode , onSubmit}: AuthFormDataProps) {
             </div>
           ))}
 
+          {!isSignIn && (
+            <fieldset className="w-full">
+              <legend className="text-sm font-medium text-white/70">
+                I am a…
+              </legend>
+              <div className="mt-1.5 grid grid-cols-3 gap-2">
+                {roles.map(({ value, label, icon: Icon }) => (
+                  <label key={value} className="cursor-pointer">
+                    <input
+                      type="radio"
+                      name="role"
+                      value={value}
+                      defaultChecked={value === "seeker"}
+                      required
+                      className="peer sr-only"
+                    />
+                    <div className="flex flex-col items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2 py-3 text-center text-xs text-white/70 transition-colors hover:border-white/25 peer-checked:border-[#5b50e6] peer-checked:bg-[#5b50e6]/15 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-[#5b50e6]/50">
+                      <Icon className="size-4" aria-hidden="true" />
+                      {label}
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          )}
+
           <button
             type="submit"
             className="w-full rounded-lg bg-[#5b50e6] py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#4a3fd6] focus-visible:ring-2 focus-visible:ring-[#5b50e6]/50 focus-visible:outline-none"
           >
             {isSignIn ? "Sign In" : "Create Account"}
           </button>
-
-          <p role="status" className="min-h-4 text-center text-xs text-white/50">
-            {submitted
-              ? "Form data collected — see the browser console. Auth logic comes later."
-              : null}
-          </p>
         </form>
 
         <p className="mt-6 text-center text-sm text-white/60">
