@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/app/images/logo.png";
 import { authClient, useSession } from "@/lib/auth-client";
+import { redirect, useRouter } from "next/navigation";
 
 const links = [
   { label: "Browse Jobs", href: "/jobs" },
@@ -15,6 +16,7 @@ const links = [
 ];
 
 export default function Navbar() {
+  const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
   const {data, error} = useSession() 
@@ -22,8 +24,8 @@ export default function Navbar() {
 
   const handleSignOut = async() => {
    await authClient.signOut();
+    window.location.href = "/";
   }
-
   return (
     <header
       className="striped-dark sticky top-0 z-50 border-b border-white/5"
