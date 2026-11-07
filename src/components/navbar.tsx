@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/app/images/logo.png";
+import { authClient, useSession } from "@/lib/auth-client";
 
 const links = [
   { label: "Browse Jobs", href: "/jobs" },
@@ -16,6 +17,12 @@ const links = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
+  const {data, error} = useSession() 
+  const user = data?.user 
+
+  const handleSignOut = async() => {
+   await authClient.signOut();
+  }
 
   return (
     <header
@@ -32,31 +39,52 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop navigation */}
-        <nav aria-label="Main" className="hidden items-center gap-6 md:flex lg:gap-8">
-          {links.map(({ label, href }) => (
-            <Link
-              key={href}
-              href={href}
-              className="text-sm font-medium text-white/90 transition-colors hover:text-white"
-            >
-              {label}
-            </Link>
-          ))}
-          <span aria-hidden="true" className="h-5 w-px bg-white/25" />
-          <Link
-            href="/sign-in"
-            className="text-sm font-medium text-[#a5a0f5] transition-colors hover:text-white"
-          >
-            Sign In
-          </Link>
-          <Button
-            render={<Link href="/sign-up" />}
-            nativeButton={false}
-            className="h-9 bg-[#5b50e6] px-4 text-white hover:bg-[#4a3fd6]"
-          >
-            Get Started
-          </Button>
-        </nav>
+        {/* Desktop navigation */}
+<div className="hidden items-center gap-4 md:flex">
+  {user ? (
+    <>
+      <p className="text-lg font-bold tracking-tight text-white">
+        {user.name}
+      </p>
+
+      <button
+        onClick={handleSignOut}
+        className="h-9 rounded-md bg-[#5b50e6] px-3 text-sm text-white hover:bg-[#4a3fd6]"
+      >
+        Sign-Out
+      </button>
+    </>
+  ) : (
+    <nav aria-label="Main" className="flex items-center gap-6 lg:gap-8">
+      {links.map(({ label, href }) => (
+        <Link
+          key={href}
+          href={href}
+          className="text-sm font-medium text-white/90 hover:text-white"
+        >
+          {label}
+        </Link>
+      ))}
+
+      <span className="h-5 w-px bg-white/25" />
+
+      <Link
+        href="/sign-in"
+        className="text-sm font-medium text-[#a5a0f5]"
+      >
+        Sign In
+      </Link>
+
+      <Button
+        render={<Link href="/sign-up" />}
+        nativeButton={false}
+        className="h-9 bg-[#5b50e6] px-4 text-white hover:bg-[#4a3fd6]"
+      >
+        Get Started
+      </Button>
+    </nav>
+  )}
+</div>
 
         {/* Mobile menu toggle */}
         <button
@@ -90,6 +118,20 @@ export default function Navbar() {
               </Link>
             ))}
           </div>
+          {user ? 
+          <div className="mt-3 flex flex-col items-center gap-3 border-t border-white/10 pt-3">
+    <p className="max-w-full break-words text-center text-base font-bold text-white">
+      {user.name}
+    </p>
+
+    <button
+      onClick={handleSignOut}
+      className="h-9 w-full rounded-md bg-[#5b50e6] px-3 text-sm text-white hover:bg-[#4a3fd6]"
+    >
+      Sign-Out
+    </button>
+  </div>
+            :
           <div className="mt-2 flex items-center gap-4 border-t border-white/10 pt-3">
             <Link
               href="/sign-in"
@@ -106,6 +148,7 @@ export default function Navbar() {
               Get Started
             </Button>
           </div>
+          }
         </nav>
       )}
     </header>
