@@ -93,7 +93,7 @@ export default function AuthForm({ mode , onSubmit}: AuthFormDataProps) {
     }`;
 
   return (
-    <section className="striped-dark flex min-h-[calc(100vh_-_4rem)] items-center justify-center px-4 py-12">
+    <section className="striped-dark flex min-h-screen items-center justify-center px-4 py-12">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#1b1010] p-6 shadow-2xl sm:p-8">
         {/* Toggle between sign-in and sign-up */}
         <nav
