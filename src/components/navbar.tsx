@@ -7,29 +7,28 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/app/images/logo.png";
 import { authClient, useSession } from "@/lib/auth-client";
-import { redirect, useRouter } from "next/navigation";
-
-const links = [
-  { label: "Browse Jobs", href: "/jobs" },
-  { label: "Company", href: "/company" },
-  { label: "Pricing", href: "/pricing" },
-];
+import type { Role } from "@/lib/roles";
 
 export default function Navbar() {
-  const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
-  const {data, error} = useSession() 
-  const user = data?.user 
+  const { data } = useSession();
+  const user = data?.user;
+  const role = (user as { role?: Role } | undefined)?.role ?? "seeker";
 
-  const handleSignOut = async() => {
-   await authClient.signOut();
+  const links = [
+    { label: "Browse Jobs", href: "/jobs" },
+    { label: "Company", href: "/company" },
+    { label: "Pricing", href: "/pricing" },
+    { label: "Dashboard", href: `/dashboard/${role}` },
+  ];
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
     window.location.href = "/";
-  }
+  };
   return (
-    <header
-      className="striped-dark sticky top-0 z-50 border-b border-white/5"
-    >
+    <header className="striped-dark sticky top-0 z-50 border-b border-white/5">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link href="/" aria-label="HireLoop home" onClick={closeMenu}>
           <Image
@@ -42,51 +41,56 @@ export default function Navbar() {
 
         {/* Desktop navigation */}
         {/* Desktop navigation */}
-<div className="hidden items-center gap-4 md:flex">
-  {user ? (
-    <>
-      <p className="text-lg font-bold tracking-tight text-white">
-        {user.name}
-      </p>
+        <div className="hidden items-center gap-4 md:flex">
+          {user ? (
+            <>
+              <nav
+                aria-label="Main"
+                className="flex items-center gap-6 lg:gap-8"
+              >
+                {links.map(({ label, href }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className="text-sm font-medium text-white/90 hover:text-white"
+                  >
+                    {label}
+                  </Link>
+                ))}
 
-      <button
-        onClick={handleSignOut}
-        className="h-9 rounded-md bg-[#5b50e6] px-3 text-sm text-white hover:bg-[#4a3fd6]"
-      >
-        Sign-Out
-      </button>
-    </>
-  ) : (
-    <nav aria-label="Main" className="flex items-center gap-6 lg:gap-8">
-      {links.map(({ label, href }) => (
-        <Link
-          key={href}
-          href={href}
-          className="text-sm font-medium text-white/90 hover:text-white"
-        >
-          {label}
-        </Link>
-      ))}
+                <span className="h-5 w-px bg-white/25" />
+              </nav>
 
-      <span className="h-5 w-px bg-white/25" />
+              <p className="text-lg font-bold tracking-tight text-white">
+                {user.name}
+              </p>
 
-      <Link
-        href="/sign-in"
-        className="text-sm font-medium text-[#a5a0f5]"
-      >
-        Sign In
-      </Link>
+              <button
+                onClick={handleSignOut}
+                className="h-9 rounded-md bg-[#5b50e6] px-3 text-sm text-white hover:bg-[#4a3fd6]"
+              >
+                Sign-Out
+              </button>
+            </>
+          ) : (
+            <div>
+              <Link
+                href="/sign-in"
+                className="text-sm font-medium text-[#a5a0f5]"
+              >
+                Sign In
+              </Link>
 
-      <Button
-        render={<Link href="/sign-up" />}
-        nativeButton={false}
-        className="h-9 bg-[#5b50e6] px-4 text-white hover:bg-[#4a3fd6]"
-      >
-        Get Started
-      </Button>
-    </nav>
-  )}
-</div>
+              <Button
+                render={<Link href="/sign-up" />}
+                nativeButton={false}
+                className="h-9 bg-[#5b50e6] px-4 text-white hover:bg-[#4a3fd6]"
+              >
+                Get Started
+              </Button>
+            </div>
+          )}
+        </div>
 
         {/* Mobile menu toggle */}
         <button
@@ -120,37 +124,37 @@ export default function Navbar() {
               </Link>
             ))}
           </div>
-          {user ? 
-          <div className="mt-3 flex flex-col items-center gap-3 border-t border-white/10 pt-3">
-    <p className="max-w-full break-words text-center text-base font-bold text-white">
-      {user.name}
-    </p>
+          {user ? (
+            <div className="mt-3 flex flex-col items-center gap-3 border-t border-white/10 pt-3">
+              <p className="max-w-full break-words text-center text-base font-bold text-white">
+                {user.name}
+              </p>
 
-    <button
-      onClick={handleSignOut}
-      className="h-9 w-full rounded-md bg-[#5b50e6] px-3 text-sm text-white hover:bg-[#4a3fd6]"
-    >
-      Sign-Out
-    </button>
-  </div>
-            :
-          <div className="mt-2 flex items-center gap-4 border-t border-white/10 pt-3">
-            <Link
-              href="/sign-in"
-              onClick={closeMenu}
-              className="text-sm font-medium text-[#a5a0f5] transition-colors hover:text-white"
-            >
-              Sign In
-            </Link>
-            <Button
-              render={<Link href="/sign-up" onClick={closeMenu} />}
-              nativeButton={false}
-              className="h-9 flex-1 bg-[#5b50e6] px-4 text-white hover:bg-[#4a3fd6]"
-            >
-              Get Started
-            </Button>
-          </div>
-          }
+              <button
+                onClick={handleSignOut}
+                className="h-9 w-full rounded-md bg-[#5b50e6] px-3 text-sm text-white hover:bg-[#4a3fd6]"
+              >
+                Sign-Out
+              </button>
+            </div>
+          ) : (
+            <div className="mt-2 flex items-center gap-4 border-t border-white/10 pt-3">
+              <Link
+                href="/sign-in"
+                onClick={closeMenu}
+                className="text-sm font-medium text-[#a5a0f5] transition-colors hover:text-white"
+              >
+                Sign In
+              </Link>
+              <Button
+                render={<Link href="/sign-up" onClick={closeMenu} />}
+                nativeButton={false}
+                className="h-9 flex-1 bg-[#5b50e6] px-4 text-white hover:bg-[#4a3fd6]"
+              >
+                Get Started
+              </Button>
+            </div>
+          )}
         </nav>
       )}
     </header>
