@@ -74,7 +74,7 @@ const DashboardSidebar = () => {
   return (
     <Sidebar>
       <SidebarHeader />
-      <SidebarContent>
+      <SidebarContent className="bg-blue-950 text-white">
         <SidebarGroup />
         <SidebarGroup />
         <SidebarGroup>

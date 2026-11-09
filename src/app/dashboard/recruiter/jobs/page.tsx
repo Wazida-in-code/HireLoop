@@ -19,11 +19,13 @@ export type JobDataType = {
 import { useState } from "react";
 import { Globe, MapPin, Calendar } from "lucide-react";
 import { createJob } from "@/lib/actions/jobs";
+import { toast } from "@/components/ui/toast";
+import { useRouter } from "next/navigation";
 
 const AddJobsPage = () => {
   const [jobType, setJobType] = useState("Full-time");
   const [isRemote, setIsRemote] = useState(false);
-
+  const router = useRouter()
   const jobTypes = ["Full-time", "Part-time", "Contract", "Internship"];
 
   const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
@@ -48,7 +50,17 @@ const AddJobsPage = () => {
       requirements: String(data.requirements ?? ""),
     };
     const result = await createJob(jobData);
-    console.log(result);
+    if(result.insertedId){
+      toast.add({
+        title: "Job added Successfully!",
+        type: "success",
+      });
+    }else{
+      toast.add({
+        title: "Something went wrong!",
+      });
+    }
+    router.push('/dashboard/recruiter/manage-jobs')
   };
 
   return (

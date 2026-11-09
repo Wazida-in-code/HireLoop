@@ -4,10 +4,10 @@ import { Toaster } from "@/components/ui/toast";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     return (
-    <SidebarProvider>
+    <SidebarProvider className="bg-blue-950">
       <DashboardSidebar />
       <main>
-        <SidebarTrigger />
+        <SidebarTrigger className="text-white" />
         {children}
       </main>
       <Toaster />
