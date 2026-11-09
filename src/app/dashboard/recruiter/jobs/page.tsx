@@ -1,8 +1,24 @@
-
 "use client";
+
+export type JobDataType = {
+  title: string;
+  company: string;
+  category: string;
+  jobType: string;
+  isRemote: boolean;
+  location: string;
+  deadline: string;
+  minSalary: string;
+  maxSalary: string;
+  salaryType: string;
+  description: string;
+  responsibilities: string;
+  requirements: string;
+};
 
 import { useState } from "react";
 import { Globe, MapPin, Calendar } from "lucide-react";
+import { createJob } from "@/lib/actions/jobs";
 
 const AddJobsPage = () => {
   const [jobType, setJobType] = useState("Full-time");
@@ -10,19 +26,29 @@ const AddJobsPage = () => {
 
   const jobTypes = ["Full-time", "Part-time", "Contract", "Internship"];
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
 
-    const jobData = {
-      ...data,
+    const jobData: JobDataType = {
+      title: String(data.title ?? ""),
+      company: String(data.company ?? ""),
+      category: String(data.category ?? ""),
       jobType,
       isRemote,
+      location: String(data.location ?? ""),
+      deadline: String(data.deadline ?? ""),
+      minSalary: String(data.minSalary ?? ""),
+      maxSalary: String(data.maxSalary ?? ""),
+      salaryType: String(data.salaryType ?? ""),
+      description: String(data.description ?? ""),
+      responsibilities: String(data.responsibilities ?? ""),
+      requirements: String(data.requirements ?? ""),
     };
-
-    console.log(jobData);
+    const result = await createJob(jobData);
+    console.log(result);
   };
 
   return (
