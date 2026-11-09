@@ -2,52 +2,28 @@
 
 import { Fragment, useState } from "react";
 import Link from "next/link";
+import { Briefcase, ChevronDown, Plus } from "lucide-react";
+import type { JobRecord } from "@/lib/types";
 import {
-  Briefcase,
-  ChevronDown,
-  Cloud,
-  Code,
-  EllipsisVertical,
-  Globe,
-  Layers,
-  MapPin,
-  Megaphone,
-  Pencil,
-  PenTool,
-  Plus,
-  ShieldCheck,
-  Users,
-} from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import type { JobDataType } from "@/app/dashboard/recruiter/jobs/page";
-import { DeleteJob } from "@/app/components/DeleteJob";
+  ApplicantsCount,
+  CategoryTile,
+  CompanyBlock,
+  DeadlineBlock,
+  JobActions,
+  JobDetails,
+  MetaLabel,
+  SalaryText,
+  StatusBadge,
+  TypePill,
+  getCategoryStyle,
+} from "@/components/job-ui";
 
-/** Row shape passed to the table — currently dummy data, later API/Mongo docs. */
-export type JobRecord = JobDataType & {
-  _id: string;
-  createdAt?: string;
-  applicants?: number;
-};
+/* Repeated style atoms */
+const PANEL = "rounded-xl border border-[#22252A] bg-[#0C0D10]";
+const CELL = "px-5 py-4";
+const TH = "px-5 py-4 font-medium";
 
-const categoryStyles: Record<string, { text: string; icon: typeof Code }> = {
-  "Engineering & Tech": { text: "text-sky-400", icon: Code },
-  "Design & Creative": { text: "text-orange-400", icon: PenTool },
-  "Product Management": { text: "text-violet-400", icon: Layers },
-  "Marketing & Sales": { text: "text-purple-400", icon: Megaphone },
-  // Labels used by the Figma dummy rows
-  Engineering: { text: "text-sky-400", icon: Code },
-  Design: { text: "text-orange-400", icon: PenTool },
-  Infrastructure: { text: "text-sky-400", icon: Cloud },
-  Marketing: { text: "text-purple-400", icon: Megaphone },
-  Quality: { text: "text-violet-400", icon: ShieldCheck },
-};
-
-const defaultCategoryStyle = { text: "text-indigo-400", icon: Briefcase };
+/* ---------- Formatters (presentation logic for raw job fields) ---------- */
 
 function unitFor(salaryType: string): string {
   switch (salaryType) {
@@ -143,135 +119,7 @@ function postedAgo(job: JobRecord): string {
   return `Posted ${months}mo ago`;
 }
 
-/* ---------- Shared pieces (used by both the card and table layouts) ---------- */
-
-function StatusBadge({ expired }: { expired: boolean }) {
-  return (
-    <span className="inline-flex items-center gap-1.5 text-xs whitespace-nowrap">
-      <span
-        className={`h-1.5 w-1.5 rounded-full ${
-          expired ? "bg-gray-500" : "bg-emerald-500"
-        }`}
-      />
-      <span className={expired ? "text-gray-400" : "text-emerald-400"}>
-        {expired ? "Expired" : "Active"}
-      </span>
-    </span>
-  );
-}
-
-function CompanyBlock({ job }: { job: JobRecord }) {
-  return (
-    <div className="min-w-0">
-      <p className="font-medium text-gray-100">{job.company}</p>
-      <p className="mt-0.5 flex items-center gap-1.5 text-xs text-gray-500">
-        {job.isRemote ? (
-          <Globe className="h-3.5 w-3.5 shrink-0" />
-        ) : (
-          <MapPin className="h-3.5 w-3.5 shrink-0" />
-        )}
-        <span className="truncate">
-          {job.isRemote
-            ? job.location
-              ? `Remote (${job.location})`
-              : "Remote"
-            : job.location || "No location"}
-        </span>
-      </p>
-    </div>
-  );
-}
-
-function JobActions({
-  job,
-  expanded,
-  onToggle,
-}: {
-  job: JobRecord;
-  expanded: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <div className="flex items-center justify-end gap-2">
-      <Link
-        href={`/dashboard/recruiter/jobs?edit=${job._id}`}
-        className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-indigo-500"
-      >
-        <Pencil className="h-3.5 w-3.5" />
-        Update
-      </Link>
-
-        <DeleteJob job={job} />
-     
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          aria-label={`More actions for ${job.title}`}
-          className="p-1.5 text-gray-400 transition hover:text-white"
-        >
-          <EllipsisVertical className="h-4 w-4" />
-        </DropdownMenuTrigger>
-
-        <DropdownMenuContent
-          align="end"
-          className="bg-[#121316] text-white ring-[#22252A]"
-        >
-          <DropdownMenuItem
-            onClick={onToggle}
-            className="focus:bg-[#1A1D22] focus:text-white"
-          >
-            {expanded ? "Hide details" : "View details"}
-          </DropdownMenuItem>
-
-          <DropdownMenuItem className="text-red-400 focus:bg-red-500/10 focus:text-red-400">
-            Delete job
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  );
-}
-
-/** Description / responsibilities / requirements — shown when a row or card is expanded. */
-function JobDetails({ job }: { job: JobRecord }) {
-  return (
-    <div className="grid gap-6 md:grid-cols-3">
-      <div>
-        <h4 className="text-[11px] font-semibold tracking-wider text-gray-500 uppercase">
-          Description
-        </h4>
-        <p className="mt-2 text-sm leading-relaxed whitespace-pre-line text-gray-300">
-          {job.description || "—"}
-        </p>
-      </div>
-
-      <div>
-        <h4 className="text-[11px] font-semibold tracking-wider text-gray-500 uppercase">
-          Responsibilities
-        </h4>
-        <p className="mt-2 text-sm leading-relaxed whitespace-pre-line text-gray-300">
-          {job.responsibilities || "—"}
-        </p>
-      </div>
-
-      <div>
-        <h4 className="text-[11px] font-semibold tracking-wider text-gray-500 uppercase">
-          Requirements
-        </h4>
-        <p className="mt-2 text-sm leading-relaxed whitespace-pre-line text-gray-300">
-          {job.requirements || "—"}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function MetaLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[11px] tracking-wider text-gray-500 uppercase">
-      {children}
-    </p>
-  );
-}
+/* ---------- Table ---------- */
 
 type Props = {
   jobs: JobRecord[];
@@ -286,7 +134,7 @@ export default function JobsTable({ jobs }: Props) {
 
   if (jobs.length === 0) {
     return (
-      <div className="mx-auto max-w-md rounded-xl border border-[#22252A] bg-[#0C0D10] px-6 py-12 text-center sm:py-16">
+      <div className={`mx-auto max-w-md ${PANEL} px-6 py-12 text-center sm:py-16`}>
         <Briefcase className="mx-auto h-10 w-10 text-gray-600" />
 
         <h2 className="mt-4 text-lg font-semibold text-white">No job posts yet</h2>
@@ -311,16 +159,12 @@ export default function JobsTable({ jobs }: Props) {
       {/* ---------- Small screens (< md): stacked cards ---------- */}
       <ul className="space-y-3 md:hidden">
         {jobs.map((job) => {
-          const style = categoryStyles[job.category] ?? defaultCategoryStyle;
-          const CategoryIcon = style.icon;
           const expired = isExpired(job.deadline);
           const expanded = expandedId === job._id;
+          const deptClass = getCategoryStyle(job.category).text;
 
           return (
-            <li
-              key={job._id}
-              className="overflow-hidden rounded-xl border border-[#22252A] bg-[#0C0D10]"
-            >
+            <li key={job._id} className={`overflow-hidden ${PANEL}`}>
               {/* Tappable header */}
               <button
                 type="button"
@@ -328,15 +172,13 @@ export default function JobsTable({ jobs }: Props) {
                 aria-expanded={expanded}
                 className="flex w-full cursor-pointer items-start gap-3 p-4 text-left"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#1A1D22]">
-                  <CategoryIcon className={`h-4 w-4 ${style.text}`} />
-                </span>
+                <CategoryTile category={job.category} />
 
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium text-white">
                     {job.title}
                   </span>
-                  <span className={`block text-xs ${style.text}`}>
+                  <span className={`block text-xs ${deptClass}`}>
                     {job.category || "Uncategorized"}
                   </span>
                   <span className="mt-1.5 block">
@@ -366,34 +208,26 @@ export default function JobsTable({ jobs }: Props) {
 
                 <div className="min-w-0">
                   <MetaLabel>Type</MetaLabel>
-                  <span className="mt-1 inline-flex rounded-full bg-[#1E2126] px-3 py-1 text-xs text-gray-300">
-                    {job.jobType}
-                  </span>
+                  <TypePill type={job.jobType} className="mt-1" />
                 </div>
 
                 <div className="min-w-0">
                   <MetaLabel>Compensation</MetaLabel>
-                  <p className="mt-1 text-sm font-medium text-gray-100">
-                    {formatSalary(job)}
-                  </p>
+                  <SalaryText value={formatSalary(job)} className="mt-1 text-sm" />
                 </div>
 
                 <div className="min-w-0">
                   <MetaLabel>Deadline</MetaLabel>
-                  <p className="mt-1 text-sm text-gray-200">
-                    {formatDeadline(job.deadline)}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {expired ? "Closed" : postedAgo(job)}
-                  </p>
+                  <DeadlineBlock
+                    date={formatDeadline(job.deadline)}
+                    sub={expired ? "Closed" : postedAgo(job)}
+                    className="mt-1"
+                  />
                 </div>
 
                 <div className="min-w-0">
                   <MetaLabel>Applicants</MetaLabel>
-                  <p className="mt-1 flex items-center gap-1.5 text-sm text-gray-300">
-                    <Users className="h-4 w-4 shrink-0 text-gray-400" />
-                    {job.applicants ?? 0} Candidates
-                  </p>
+                  <ApplicantsCount count={job.applicants} className="mt-1" />
                 </div>
               </div>
 
@@ -411,27 +245,26 @@ export default function JobsTable({ jobs }: Props) {
       </ul>
 
       {/* ---------- md and up: full table ---------- */}
-      <div className="hidden overflow-x-auto rounded-xl border border-[#22252A] bg-[#0C0D10] md:block">
+      <div className={`hidden overflow-x-auto md:block ${PANEL}`}>
         <table className="w-full min-w-[1040px] text-left text-sm">
           <thead>
             <tr className="border-b border-[#22252A] text-[11px] tracking-wider text-gray-500 uppercase">
-              <th className="px-5 py-4 font-medium">Job Title &amp; Dept</th>
-              <th className="px-5 py-4 font-medium">Company &amp; Location</th>
-              <th className="px-5 py-4 font-medium">Type</th>
-              <th className="px-5 py-4 font-medium">Compensation</th>
-              <th className="px-5 py-4 font-medium">Applicants</th>
-              <th className="px-5 py-4 font-medium">Status</th>
-              <th className="px-5 py-4 font-medium">Deadline</th>
-              <th className="px-5 py-4 text-right font-medium">Actions</th>
+              <th className={TH}>Job Title &amp; Dept</th>
+              <th className={TH}>Company &amp; Location</th>
+              <th className={TH}>Type</th>
+              <th className={TH}>Compensation</th>
+              <th className={TH}>Applicants</th>
+              <th className={TH}>Status</th>
+              <th className={TH}>Deadline</th>
+              <th className={`${TH} text-right`}>Actions</th>
             </tr>
           </thead>
 
           <tbody>
             {jobs.map((job) => {
-              const style = categoryStyles[job.category] ?? defaultCategoryStyle;
-              const CategoryIcon = style.icon;
               const expired = isExpired(job.deadline);
               const expanded = expandedId === job._id;
+              const deptClass = getCategoryStyle(job.category).text;
 
               return (
                 <Fragment key={job._id}>
@@ -442,17 +275,15 @@ export default function JobsTable({ jobs }: Props) {
                     }`}
                   >
                     {/* Job Title & Dept */}
-                    <td className="px-5 py-4">
+                    <td className={CELL}>
                       <div className="flex items-center gap-3">
-                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#1A1D22]">
-                          <CategoryIcon className={`h-4 w-4 ${style.text}`} />
-                        </span>
+                        <CategoryTile category={job.category} />
 
                         <div className="min-w-0">
                           <p className="truncate font-medium text-white">
                             {job.title}
                           </p>
-                          <p className={`text-xs ${style.text}`}>
+                          <p className={`text-xs ${deptClass}`}>
                             {job.category || "Uncategorized"}
                           </p>
                         </div>
@@ -460,50 +291,40 @@ export default function JobsTable({ jobs }: Props) {
                     </td>
 
                     {/* Company & Location */}
-                    <td className="px-5 py-4">
+                    <td className={CELL}>
                       <CompanyBlock job={job} />
                     </td>
 
                     {/* Type */}
-                    <td className="px-5 py-4">
-                      <span className="inline-flex rounded-full bg-[#1E2126] px-3 py-1 text-xs text-gray-300">
-                        {job.jobType}
-                      </span>
+                    <td className={CELL}>
+                      <TypePill type={job.jobType} />
                     </td>
 
                     {/* Compensation */}
-                    <td className="px-5 py-4 font-medium whitespace-nowrap text-gray-100">
-                      {formatSalary(job)}
+                    <td className={`${CELL} whitespace-nowrap`}>
+                      <SalaryText value={formatSalary(job)} />
                     </td>
 
                     {/* Applicants */}
-                    <td className="px-5 py-4 whitespace-nowrap">
-                      <span className="flex items-center gap-1.5 text-sm text-gray-300">
-                        <Users className="h-4 w-4 text-gray-400" />
-                        {job.applicants ?? 0} Candidates
-                      </span>
+                    <td className={`${CELL} whitespace-nowrap`}>
+                      <ApplicantsCount count={job.applicants} />
                     </td>
 
                     {/* Status */}
-                    <td className="px-5 py-4">
+                    <td className={CELL}>
                       <StatusBadge expired={expired} />
                     </td>
 
                     {/* Deadline */}
-                    <td className="px-5 py-4 whitespace-nowrap">
-                      <p className="text-sm text-gray-200">
-                        {formatDeadline(job.deadline)}
-                      </p>
-                      <p className="mt-0.5 text-xs text-gray-500">
-                        {expired ? "Closed" : postedAgo(job)}
-                      </p>
+                    <td className={`${CELL} whitespace-nowrap`}>
+                      <DeadlineBlock
+                        date={formatDeadline(job.deadline)}
+                        sub={expired ? "Closed" : postedAgo(job)}
+                      />
                     </td>
 
                     {/* Actions */}
-                    <td
-                      className="px-5 py-4"
-                      onClick={(event) => event.stopPropagation()}
-                    >
+                    <td className={CELL} onClick={(event) => event.stopPropagation()}>
                       <JobActions
                         job={job}
                         expanded={expanded}

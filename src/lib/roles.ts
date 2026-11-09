@@ -1,4 +1,7 @@
-export type Role = "seeker" | "recruiter" | "admin";
+import type { Role } from "./types";
+
+// Re-exported so existing `@/lib/roles` imports keep working — the definition lives in @/lib/types.
+export type { Role };
 
 export const roleHome: Record<Role, string> = {
   seeker: "/seeker",

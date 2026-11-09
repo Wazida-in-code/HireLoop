@@ -1,24 +1,9 @@
 "use client";
 
-export type JobDataType = {
-  title: string;
-  company: string;
-  category: string;
-  jobType: string;
-  isRemote: boolean;
-  location: string;
-  deadline: string;
-  minSalary: string;
-  maxSalary: string;
-  salaryType: string;
-  description: string;
-  responsibilities: string;
-  requirements: string;
-};
-
 import { useState } from "react";
 import { Globe, MapPin, Calendar } from "lucide-react";
 import { createJob } from "@/lib/actions/jobs";
+import type { JobDataType } from "@/lib/types";
 import { toast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
 

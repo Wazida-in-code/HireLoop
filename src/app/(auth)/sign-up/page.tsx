@@ -2,7 +2,8 @@
 import { useRouter } from "next/navigation";
 import { signUp } from "@/lib/auth-client";
 import { homeForRole } from "@/lib/roles";
-import AuthForm, { AuthFormData } from "@/components/auth-form";
+import AuthForm from "@/components/auth-form";
+import type { AuthFormData } from "@/lib/types";
 
 export default function SignUpPage() {
     const router = useRouter();

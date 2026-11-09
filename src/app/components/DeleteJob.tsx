@@ -13,7 +13,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { DeleteJobData } from "@/lib/actions/jobs";
-import { JobRecord } from "../dashboard/recruiter/manage-jobs/jobs-table";
+import { JobRecord } from "@/lib/types";
 import { useState } from "react";
 import { toast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";

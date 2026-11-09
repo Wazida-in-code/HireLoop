@@ -3,16 +3,7 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { Briefcase, Eye, EyeOff, ShieldCheck, User } from "lucide-react";
-import type { Role } from "@/lib/roles";
-
-type AuthMode = "sign-in" | "sign-up";
-
-export type AuthFormData = {
-  name?: string;
-  email: string;
-  password: string;
-  role?: Role;
-};
+import type { AuthFormData, AuthMode } from "@/lib/types";
 
 type Field = {
   name: string;
