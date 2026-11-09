@@ -16,7 +16,6 @@ import {
   PenTool,
   Plus,
   ShieldCheck,
-  Trash2,
   Users,
 } from "lucide-react";
 import {
@@ -26,6 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { JobDataType } from "@/app/dashboard/recruiter/jobs/page";
+import { DeleteJob } from "@/app/components/DeleteJob";
 
 /** Row shape passed to the table — currently dummy data, later API/Mongo docs. */
 export type JobRecord = JobDataType & {
@@ -201,14 +201,8 @@ function JobActions({
         Update
       </Link>
 
-      <button
-        type="button"
-        aria-label={`Delete ${job.title}`}
-        className="rounded-lg border border-[#22252A] bg-[#121316] p-2 text-gray-400 transition hover:border-red-500/40 hover:text-red-400"
-      >
-        <Trash2 className="h-4 w-4" />
-      </button>
-
+        <DeleteJob job={job} />
+     
       <DropdownMenu>
         <DropdownMenuTrigger
           aria-label={`More actions for ${job.title}`}
