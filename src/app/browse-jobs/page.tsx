@@ -12,10 +12,11 @@ type Props = {
 };
 
 export default async function BrowseJobsPage({ searchParams }: Props) {
-  const search = await searchParams;
-  const urlSearch = new URLSearchParams(search as Record<string, string>);
-  const jobs = await getJobs(urlSearch.toString());
-  const initialQuery = typeof search.q === "string" ? search.q : "";
+  const search = await searchParams
+    const urlSearch = new URLSearchParams(search as Record<string, string>);
+    const query = urlSearch.toString()
+    const jobs = await getJobs(query)
+    const initialQuery = typeof search.q === "string" ? search.q : "";
 
   return (
     <div className="min-h-screen bg-[#090A0C] text-white">

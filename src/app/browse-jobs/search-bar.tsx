@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   /** Query currently in the URL, so the input starts out in sync with the results. */
@@ -9,11 +10,17 @@ type Props = {
 };
 
 export default function SearchBar({ initialQuery = "" }: Props) {
+  const router = useRouter()
   const [query, setQuery] = useState(initialQuery);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO: write `query` into the URL search params (?q=…) and re-fetch.
+    const formData = new FormData(event.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+    const search = data.searchField;
+    const params = new URLSearchParams();
+    params.set('search', search as string);
+    router.push(`/browse-jobs?${params.toString()}`)
   };
 
   return (
@@ -28,7 +35,7 @@ export default function SearchBar({ initialQuery = "" }: Props) {
         Search jobs
       </label>
       <input
-        id="job-search"
+        id="job-search" name="searchField"
         type="text"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
