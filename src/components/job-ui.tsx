@@ -78,15 +78,18 @@ export function StatusBadge({ expired }: { expired: boolean }) {
 
 export function TypePill({
   type,
+  icon,
   className,
 }: {
   type: string;
+  icon?: ReactNode;
   className?: string;
 }) {
   return (
     <span
-      className={`inline-flex rounded-full bg-[#1E2126] px-3 py-1 text-xs text-gray-300 ${className ?? ""}`}
+      className={`inline-flex items-center gap-1.5 rounded-full bg-[#1E2126] px-3 py-1 text-xs text-gray-300 ${className ?? ""}`}
     >
+      {icon}
       {type}
     </span>
   );

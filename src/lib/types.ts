@@ -44,3 +44,13 @@ export type JobRecord = JobDataType & {
   createdAt?: string;
   applicants?: number;
 };
+
+/** One selectable option in the browse-jobs filter sidebar (with its match count). */
+export type FilterOption = {
+  /** Value that will identify the choice in the search query. */
+  value: string;
+  /** Display text — falls back to `value` when omitted. */
+  label?: string;
+  /** How many of the fetched jobs match this option. */
+  count: number;
+};

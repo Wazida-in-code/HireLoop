@@ -3,6 +3,7 @@
 import { Fragment, useState } from "react";
 import Link from "next/link";
 import { Briefcase, ChevronDown, Plus } from "lucide-react";
+import { formatSalary } from "@/lib/format";
 import type { JobRecord } from "@/lib/types";
 import {
   ApplicantsCount,
@@ -24,40 +25,6 @@ const CELL = "px-5 py-4";
 const TH = "px-5 py-4 font-medium";
 
 /* ---------- Formatters (presentation logic for raw job fields) ---------- */
-
-function unitFor(salaryType: string): string {
-  switch (salaryType) {
-    case "Per hour":
-      return "/ hr";
-    case "Per month":
-      return "/ mo";
-    case "Per year":
-      return "/ yr";
-    default:
-      return "";
-  }
-}
-
-function formatSalary(job: JobRecord): string {
-  const toAmount = (value: string): string | null => {
-    const n = Number(value);
-    if (!value.trim() || Number.isNaN(n)) return null;
-    return n >= 1000 ? `${Math.round(n / 1000)}k` : `${n}`;
-  };
-
-  const min = toAmount(job.minSalary);
-  const max = toAmount(job.maxSalary);
-
-  if (!min && !max) return "Not specified";
-
-  const range = [min, max]
-    .filter(Boolean)
-    .map((amount) => `€${amount}`)
-    .join(" – ");
-  const unit = unitFor(job.salaryType);
-
-  return unit ? `${range} ${unit}` : range;
-}
 
 /** "YYYY-MM-DD" from <input type="date"> → local calendar date (avoids UTC off-by-one). */
 function parseDeadline(value: string): Date | null {
