@@ -1,6 +1,7 @@
 "use client";
 import { toast } from "@/components/ui/toast";
 import { applyJob } from "@/lib/actions/jobs";
+import { getApplicationsCount } from "@/lib/api/applications";
 import { useSession } from "@/lib/auth-client";
 import { JobRecord, Role, type ApplicationDataType } from "@/lib/types";
 import { Bookmark } from "lucide-react";
@@ -17,39 +18,37 @@ export default function JobActions({ job }: { job: JobRecord }) {
       return;
     }
     if (role === "seeker") {
-
       // number of jobs applied by this user
-      
-
-      // Everything the my-applications table shows, saved with the application.
-      const application: ApplicationDataType = {
-        jobId: job._id,
-        userId: user.id,
-        email: user.email,
-        jobTitle: job.title,
-        companyName: job.company,
-        jobType: job.jobType,
-        category: job.category,
-        isRemote: job.isRemote,
-        location: job.location,
-        status: "Applied",
-        appliedAt: new Date().toISOString(),
-      };
-      const result = await applyJob(application);
-      if (result.insertedId) {
-        toast.add({
-          title: "Job applied Successfully!",
-          type: "success",
-        });
-        router.push('/browse-jobs')
+      const countResult = await getApplicationsCount(`userId=${user.id}`);
+      if (countResult.count >= 10) {
+        router.push('/payment')
+        return;
+      } else {
+        const application: ApplicationDataType = {
+          jobId: job._id,
+          userId: user.id,
+          email: user.email,
+          jobTitle: job.title,
+          companyName: job.company,
+          jobType: job.jobType,
+          category: job.category,
+          isRemote: job.isRemote,
+          location: job.location,
+          status: "Applied",
+          appliedAt: new Date().toISOString(),
+        };
+        const result = await applyJob(application);
+        if (result.insertedId) {
+          toast.add({
+            title: "Job applied Successfully!",
+            type: "success",
+          });
+          router.push("/browse-jobs");
+        }
       }
-    } else {
-      toast.add({
-        title: "Only job seeker's can apply!",
-        type: "error",
-      });
-    }
+    } 
   };
+
   return (
     <div className="flex items-center gap-2">
       <button
