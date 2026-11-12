@@ -66,8 +66,9 @@ function TabLink({
 export default async function MyApplicationsPage({ searchParams }: Props) {
   const session = await requireRole("seeker");
   const search = await searchParams;
-  const applications = await getApplications(session.user.id);
-
+  const applications = await getApplications(
+  `userId=${session.user.id}`
+  );
   // "Archived" holds rejected applications; everything else is active.
   const isArchived = search.tab === "archived";
   const visible = applications.filter((application) =>

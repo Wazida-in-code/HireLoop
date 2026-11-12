@@ -17,6 +17,10 @@ export default function JobActions({ job }: { job: JobRecord }) {
       return;
     }
     if (role === "seeker") {
+
+      // number of jobs applied by this user
+      
+
       // Everything the my-applications table shows, saved with the application.
       const application: ApplicationDataType = {
         jobId: job._id,

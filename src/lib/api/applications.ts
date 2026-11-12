@@ -47,19 +47,13 @@ const SAMPLE_APPLICATIONS: SampleRow[] = [
  * Falls back to sample data when the endpoint is missing or errors, so the
  * page always has something to render instead of crashing.
  */
-export const getApplications = async (userId: string): Promise<ApplicationRecord[]> => {
-    try {
-        const res = await fetch(`${BASE_URL}/applications?userId=${encodeURIComponent(userId)}`);
-        if (res.ok) return res.json();
-    } catch {
-        // Endpoint unreachable — fall through to the sample data below.
-    }
-
-    return SAMPLE_APPLICATIONS.map(({ hoursAgo, ...row }, index) => ({
-        _id: `sample-${index + 1}`,
-        userId,
-        email: "",
-        appliedAt: new Date(Date.now() - hoursAgo * 3_600_000).toISOString(),
-        ...row,
-    }));
+export const getApplications = async (query = "" ): Promise<ApplicationRecord[]> => {
+    const res = await fetch(`${BASE_URL}/applications?${query}`)
+    return res.json()
 }
+
+// export const getApplicationsCount = async (query = "" ): Promise<{count:number}> => {
+//     const res = await fetch(`${BASE_URL}/applications/count?${query}`)
+//     return res.json()
+// }
+

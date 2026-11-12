@@ -28,7 +28,7 @@ function Pill({
 }
 
 export default function JobCard({ job }: { job: JobRecord }) {
-   const router = useRouter()
+  const router = useRouter()
   const handleJobDetails = (id:string) => {
    router.push(`/browse-jobs/${id}`)
   }
