@@ -1,11 +1,11 @@
-import React from 'react';
+import type { Metadata } from "next";
+import PaymentForm from "./payment-form";
 
-const PaymentPage = () => {
-    return (
-        <div>
-            PaymentPage
-        </div>
-    );
+export const metadata: Metadata = {
+  title: "Payment — HireLoop",
 };
 
-export default PaymentPage;
+/** Checkout is a client flow, so the page only supplies the metadata. */
+export default function PaymentPage() {
+  return <PaymentForm />;
+}
