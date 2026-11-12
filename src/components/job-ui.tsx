@@ -3,17 +3,10 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import {
-  Briefcase,
-  Cloud,
-  Code,
   EllipsisVertical,
   Globe,
-  Layers,
   MapPin,
-  Megaphone,
   Pencil,
-  PenTool,
-  ShieldCheck,
   Users,
 } from "lucide-react";
 import {
@@ -27,25 +20,9 @@ import { DeleteJob } from "@/app/components/DeleteJob";
 
 /* ---------- Category (dept) accent: color + icon ---------- */
 
-const categoryStyles: Record<string, { text: string; icon: typeof Code }> = {
-  "Engineering & Tech": { text: "text-sky-400", icon: Code },
-  "Design & Creative": { text: "text-orange-400", icon: PenTool },
-  "Product Management": { text: "text-violet-400", icon: Layers },
-  "Marketing & Sales": { text: "text-purple-400", icon: Megaphone },
-  // Labels used by the Figma dummy rows
-  Engineering: { text: "text-sky-400", icon: Code },
-  Design: { text: "text-orange-400", icon: PenTool },
-  Infrastructure: { text: "text-sky-400", icon: Cloud },
-  Marketing: { text: "text-purple-400", icon: Megaphone },
-  Quality: { text: "text-violet-400", icon: ShieldCheck },
-};
-
-const defaultCategoryStyle = { text: "text-indigo-400", icon: Briefcase };
-
-/** Accent color/icon for a job category (falls back to a neutral style). */
-export function getCategoryStyle(category: string) {
-  return categoryStyles[category] ?? defaultCategoryStyle;
-}
+// Defined in `lib/category` so Server Components can use it too.
+export { getCategoryStyle } from "@/lib/category";
+import { getCategoryStyle } from "@/lib/category";
 
 /** Dark rounded tile holding the category icon — used in both card and table rows. */
 export function CategoryTile({ category }: { category: string }) {
