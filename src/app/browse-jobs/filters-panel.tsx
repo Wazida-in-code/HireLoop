@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { FilterOption } from "@/lib/types";
+import { useRouter } from "next/navigation";
 
 type FilterGroupData = {
   name: string;
@@ -18,20 +19,18 @@ type Selection = Record<string, string[]>;
 
 export default function FiltersPanel({ groups }: Props) {
   const [selection, setSelection] = useState<Selection>({});
+    const router = useRouter()
 
   const toggle = (group: string, value: string) => {
-    // TODO: write the selection into the search query.
-    setSelection((current) => {
-      const selected = current[group] ?? [];
-      return {
+    setSelection((current) => ({
         ...current,
-        [group]: selected.includes(value)
-          ? selected.filter((item) => item !== value)
-          : [...selected, value],
-      };
-    });
+        [group]: current[group]?.[0] === value? []: [value]
+    }));
+    const params = new URLSearchParams(window.location.search);
+    params.set(group, value);
+    router.push(`/browse-jobs?${params.toString()}`)
   };
-
+console.log(selection);
   return (
     <aside className="rounded-xl border border-[#22252A] bg-[#121316] p-5 lg:sticky lg:top-20">
       <h2 className="text-lg font-semibold text-white">Filters</h2>
@@ -69,7 +68,6 @@ function FilterGroup({
             key={option.value}
             className="flex cursor-pointer items-center gap-2.5 rounded-md px-1 py-1.5 text-sm text-gray-300 transition-colors hover:text-white"
           >
-            {/* Dark-theme colors: gray unchecked ring, white fill + dark check when checked. */}
             <Checkbox
               checked={selected.includes(option.value)}
               onCheckedChange={() => onToggle(option.value)}

@@ -1,8 +1,10 @@
+'use client'
 import type { ReactNode } from "react";
 import { Bookmark, Briefcase, DollarSign } from "lucide-react";
 import { CategoryTile } from "@/components/job-ui";
 import { formatSalary, hasSalary } from "@/lib/format";
 import type { JobRecord } from "@/lib/types";
+import { useRouter } from "next/navigation";
 
 /** "San Francisco, CA (Remote)" — the location line under the title. */
 function locationLabel(job: JobRecord): string {
@@ -26,8 +28,12 @@ function Pill({
 }
 
 export default function JobCard({ job }: { job: JobRecord }) {
+   const router = useRouter()
+  const handleJobDetails = (id:string) => {
+   router.push(`/browse-jobs/${id}`)
+  }
   return (
-    <article className="flex items-start gap-4 rounded-xl border border-[#22252A] bg-[#121316] p-4 transition-colors hover:border-[#2E333B]">
+    <article onClick={() => handleJobDetails(job._id)} className="flex items-start gap-4 rounded-xl border border-[#22252A] bg-[#121316] p-4 transition-colors hover:border-[#2E333B]">
       <CategoryTile category={job.category} />
 
       <div className="min-w-0 flex-1">

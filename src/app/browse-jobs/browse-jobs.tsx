@@ -40,10 +40,10 @@ export default function BrowseJobs({ jobs, initialQuery }: Props) {
   const visibleJobs = jobs.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const filterGroups = [
-    { name: "Job Type", options: countBy(jobs, (job) => job.jobType) },
-    { name: "Category", options: countBy(jobs, (job) => job.category) },
+    { name: "jobType", options: countBy(jobs, (job) => job.jobType) },
+    { name: "category", options: countBy(jobs, (job) => job.category) },
     {
-      name: "Work Mode",
+      name: "isRemote",
       options: [
         {
           value: "remote",
