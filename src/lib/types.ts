@@ -54,3 +54,45 @@ export type FilterOption = {
   /** How many of the fetched jobs match this option. */
   count: number;
 };
+
+/* ---------- Applications ---------- */
+
+/**
+ * Status pipeline shown on the seeker "My Applications" page.
+ * A new application starts at "Applied" and moves through the list.
+ */
+export type ApplicationStatus =
+  | "Applied"
+  | "Review"
+  | "Interview"
+  | "Shortlisted"
+  | "Rejected"
+  | "Offered";
+
+/**
+ * Everything the my-applications table needs about a job, denormalised onto
+ * the application at apply time (job title/company change less often than a
+ * row is viewed, and the page renders without a second lookup).
+ * Payload of POST /applications.
+ */
+export type ApplicationDataType = {
+  jobId: string;
+  userId: string;
+  email: string;
+  jobTitle: string;
+  companyName: string;
+  jobType: string;
+  category: string;
+  isRemote: boolean;
+  location: string;
+  status: ApplicationStatus;
+  /** ISO timestamp of the moment the seeker applied. */
+  appliedAt: string;
+};
+
+/** A stored application row as returned by GET /applications. */
+export type ApplicationRecord = ApplicationDataType & {
+  _id: string;
+  /** Fallback timestamp when the API only stamps the insert. */
+  createdAt?: string;
+};

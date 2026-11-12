@@ -2,7 +2,7 @@
 import { toast } from "@/components/ui/toast";
 import { applyJob } from "@/lib/actions/jobs";
 import { useSession } from "@/lib/auth-client";
-import { JobRecord, Role } from "@/lib/types";
+import { JobRecord, Role, type ApplicationDataType } from "@/lib/types";
 import { Bookmark } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -17,13 +17,19 @@ export default function JobActions({ job }: { job: JobRecord }) {
       return;
     }
     if (role === "seeker") {
-      // JobId & UserId send for Application
-      const application = {
+      // Everything the my-applications table shows, saved with the application.
+      const application: ApplicationDataType = {
         jobId: job._id,
         userId: user.id,
         email: user.email,
         jobTitle: job.title,
         companyName: job.company,
+        jobType: job.jobType,
+        category: job.category,
+        isRemote: job.isRemote,
+        location: job.location,
+        status: "Applied",
+        appliedAt: new Date().toISOString(),
       };
       const result = await applyJob(application);
       if (result.insertedId) {

@@ -1,4 +1,4 @@
-import { JobDataType } from "@/lib/types";
+import { JobDataType, ApplicationDataType } from "@/lib/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"
 
@@ -22,7 +22,7 @@ export const DeleteJobData = async({id}:{ id: string }) => {
     }
 
 
-export const applyJob = async (data) => {
+export const applyJob = async (data: ApplicationDataType) => {
     const res = await fetch(`${BASE_URL}/applications`, {
         method: "POST",
         headers: {

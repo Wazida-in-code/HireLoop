@@ -16,7 +16,6 @@ import {
   Plane,
   ChartColumn,
   type LucideIcon,
-  Bookmark,
 } from "lucide-react";
 import { getCategoryStyle } from "@/lib/category";
 import { getJobById } from "@/lib/api/jobs";
