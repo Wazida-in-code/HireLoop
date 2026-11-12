@@ -8,14 +8,7 @@ export const getJobs = async (query = ''): Promise<JobRecord[]> => {
 }
 
 /** One job by id — tries GET /jobs/:id, then falls back to scanning the list. */
-export const getJobById = async (id: string): Promise<JobRecord | null> => {
-    try {
-        const res = await fetch(`${BASE_URL}/jobs/${id}`);
-        if (res.ok) return res.json();
-    } catch {
-        // Endpoint unreachable — fall through to the list lookup below.
-    }
-
-    const jobs = await getJobs();
-    return jobs.find((job) => job._id === id) ?? null;
+export const getJobById = async (id: string): Promise<JobRecord> => {
+    const res = await fetch(`${BASE_URL}/jobs/${id}`)
+    return res.json()
 }
