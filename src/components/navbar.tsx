@@ -38,13 +38,8 @@ export default function Navbar() {
             className="h-8 w-auto sm:h-9 md:h-10"
           />
         </Link>
-
-        {/* Desktop navigation */}
-        {/* Desktop navigation */}
         <div className="hidden items-center gap-4 md:flex">
-          {user ? (
-            <>
-              <nav
+          <nav
                 aria-label="Main"
                 className="flex items-center gap-6 lg:gap-8"
               >
@@ -60,7 +55,8 @@ export default function Navbar() {
 
                 <span className="h-5 w-px bg-white/25" />
               </nav>
-
+          {user ? (
+            <>
               <p className="text-lg font-bold tracking-tight text-white">
                 {user.name}
               </p>
@@ -76,7 +72,7 @@ export default function Navbar() {
             <div>
               <Link
                 href="/sign-in"
-                className="text-sm font-medium text-[#a5a0f5]"
+                className="text-sm mr-5 font-medium text-[#a5a0f5]"
               >
                 Sign In
               </Link>

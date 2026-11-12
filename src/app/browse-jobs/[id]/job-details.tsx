@@ -16,6 +16,7 @@ import {
   Plane,
   ChartColumn,
   type LucideIcon,
+  Bookmark,
 } from "lucide-react";
 import { getCategoryStyle } from "@/lib/category";
 import { getJobById } from "@/lib/api/jobs";
@@ -72,13 +73,7 @@ function toList(text: string): string[] {
 
 /* ---------- Small building blocks ---------- */
 
-function Card({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) {
+function Card({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="rounded-xl border border-[#22252A] bg-[#121316] p-5 sm:p-6">
       <h2 className="text-base font-semibold text-white">{title}</h2>
@@ -99,7 +94,10 @@ function StatCard({
   return (
     <div className="rounded-xl border border-[#22252A] bg-[#121316] p-4">
       <p className="flex items-center gap-2 text-[11px] tracking-wider text-gray-500 uppercase">
-        <Icon className="h-3.5 w-3.5 shrink-0 text-gray-400" aria-hidden="true" />
+        <Icon
+          className="h-3.5 w-3.5 shrink-0 text-gray-400"
+          aria-hidden="true"
+        />
         {label}
       </p>
       <p className="mt-2 truncate text-sm font-semibold text-white">{value}</p>
@@ -113,7 +111,10 @@ function BulletList({ items }: { items: string[] }) {
   return (
     <ul className="space-y-2.5">
       {items.map((item) => (
-        <li key={item} className="flex gap-3 text-sm leading-relaxed text-gray-400">
+        <li
+          key={item}
+          className="flex gap-3 text-sm leading-relaxed text-gray-400"
+        >
           <span
             className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gray-600"
             aria-hidden="true"
@@ -130,13 +131,11 @@ function BulletList({ items }: { items: string[] }) {
 export default async function JobDetails({ params }: Props) {
   const { id } = await params;
   const job = await getJobById(id);
-
   if (!job) notFound();
-
   const CategoryIcon = getCategoryStyle(job.category).icon;
   const requirements = toList(job.requirements);
-  // Short requirement lines double as the skill chips above the list.
   const chips = requirements.filter((item) => item.length <= 34).slice(0, 4);
+
 
   return (
     <div className="space-y-4">
@@ -145,7 +144,10 @@ export default async function JobDetails({ params }: Props) {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex min-w-0 items-start gap-4">
             <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[#1A1D22]">
-              <CategoryIcon className="h-6 w-6 text-indigo-400" aria-hidden="true" />
+              <CategoryIcon
+                className="h-6 w-6 text-indigo-400"
+                aria-hidden="true"
+              />
             </span>
 
             <div className="min-w-0">
@@ -165,7 +167,7 @@ export default async function JobDetails({ params }: Props) {
             </div>
           </div>
 
-          <JobActions title={job.title} />
+          <JobActions job={job} />
         </div>
       </article>
 
@@ -174,8 +176,16 @@ export default async function JobDetails({ params }: Props) {
         <div className="space-y-4">
           {/* Stats — sits above the description cards, inside this column */}
           <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-            <StatCard icon={DollarSign} label="Salary Range" value={formatSalary(job)} />
-            <StatCard icon={MapPin} label="Location" value={locationLabel(job)} />
+            <StatCard
+              icon={DollarSign}
+              label="Salary Range"
+              value={formatSalary(job)}
+            />
+            <StatCard
+              icon={MapPin}
+              label="Location"
+              value={locationLabel(job)}
+            />
             <StatCard icon={Briefcase} label="Job Type" value={job.jobType} />
             <StatCard
               icon={ChartColumn}
@@ -204,7 +214,10 @@ export default async function JobDetails({ params }: Props) {
                       key={chip}
                       className="inline-flex items-center gap-1.5 rounded-md bg-[#1E2126] px-2.5 py-1.5 text-xs font-medium text-gray-300"
                     >
-                      <ChipIcon className="h-3.5 w-3.5 text-gray-400" aria-hidden="true" />
+                      <ChipIcon
+                        className="h-3.5 w-3.5 text-gray-400"
+                        aria-hidden="true"
+                      />
                       {chip}
                     </span>
                   );
@@ -219,9 +232,14 @@ export default async function JobDetails({ params }: Props) {
               {BENEFITS.map(({ icon: Icon, label }) => (
                 <li key={label} className="flex items-center gap-3">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#1A1D22]">
-                    <Icon className="h-4 w-4 text-gray-300" aria-hidden="true" />
+                    <Icon
+                      className="h-4 w-4 text-gray-300"
+                      aria-hidden="true"
+                    />
                   </span>
-                  <span className="text-sm font-medium text-gray-200">{label}</span>
+                  <span className="text-sm font-medium text-gray-200">
+                    {label}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -230,16 +248,23 @@ export default async function JobDetails({ params }: Props) {
 
         <aside className="lg:sticky lg:top-20">
           <section className="rounded-xl border border-[#22252A] bg-[#121316] p-5 sm:p-6">
-            <h2 className="text-base font-semibold text-white">Company Overview</h2>
+            <h2 className="text-base font-semibold text-white">
+              Company Overview
+            </h2>
 
             {/* No company cover image in the API yet — icon placeholder for now. */}
             <div className="mt-4 flex aspect-[16/9] items-center justify-center rounded-lg bg-[#1A1D22]">
-              <Building className="h-10 w-10 text-gray-600" aria-hidden="true" />
+              <Building
+                className="h-10 w-10 text-gray-600"
+                aria-hidden="true"
+              />
             </div>
 
             <dl className="mt-4 text-sm">
               <div className="flex items-center justify-between gap-4 border-t border-[#22252A] py-3">
-                <dt className="text-[11px] tracking-wider text-gray-500 uppercase">Size</dt>
+                <dt className="text-[11px] tracking-wider text-gray-500 uppercase">
+                  Size
+                </dt>
                 <dd className="text-right text-gray-200">Not specified</dd>
               </div>
               <div className="flex items-center justify-between gap-4 border-t border-[#22252A] py-3">

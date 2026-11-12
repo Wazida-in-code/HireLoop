@@ -1,5 +1,5 @@
 'use client'
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import AuthForm from "@/components/auth-form";
 import type { AuthFormData } from "@/lib/types";
 import { signIn } from "@/lib/auth-client";
@@ -7,13 +7,15 @@ import { homeForRole } from "@/lib/roles";
 
 export default function SignInPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const redirectTo = searchParams.get("redirectTo") ?? "/"
 
     const handleSignIn = async (data: AuthFormData) => {
         const { data: signInResponse, error } = await signIn.email({
             email: data.email,
             password: data.password,
             rememberMe: true,
-            callbackURL: "/"
+            callbackURL: redirectTo
         });
         console.log(signInResponse, error);
         if (error) return;
