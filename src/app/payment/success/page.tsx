@@ -1,3 +1,4 @@
+import { paymentVerify } from '@/lib/actions/payments';
 import { stripe } from '@/lib/stripe'
 import { redirect } from 'next/navigation'
 
@@ -23,11 +24,8 @@ export default async function PaymentSuccessPage({ searchParams }:{ searchParams
   }
 
   if (status === 'complete' && payment_status=='paid') {
-    console.log({status,
-    payment_status,
-    customer_email, 
-    metadata,
-    payment_intent});
+    console.log({status, payment_status, customer_email, metadata, payment_intent});
+    const result = await paymentVerify(session_id)
     return (
       <section id="success">
         <p>
