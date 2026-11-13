@@ -6,8 +6,10 @@ import { createJob } from "@/lib/actions/jobs";
 import type { JobDataType } from "@/lib/types";
 import { toast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
+import { useSession } from "@/lib/auth-client";
 
 const AddJobsPage = () => {
+  const {data: session} = useSession()
   const [jobType, setJobType] = useState("Full-time");
   const [isRemote, setIsRemote] = useState(false);
   const router = useRouter()
@@ -22,6 +24,7 @@ const AddJobsPage = () => {
     const jobData: JobDataType = {
       title: String(data.title ?? ""),
       company: String(data.company ?? ""),
+      recruiterId: session?.user.id ?? "",
       category: String(data.category ?? ""),
       jobType,
       isRemote,

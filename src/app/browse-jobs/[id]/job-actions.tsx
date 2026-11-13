@@ -2,6 +2,7 @@
 import { toast } from "@/components/ui/toast";
 import { applyJob } from "@/lib/actions/jobs";
 import { getApplicationsCount } from "@/lib/api/applications";
+import { getPremiumUserId } from "@/lib/api/user";
 import { useSession } from "@/lib/auth-client";
 import { JobRecord, Role, type ApplicationDataType } from "@/lib/types";
 import { Bookmark } from "lucide-react";
@@ -18,6 +19,11 @@ export default function JobActions({ job }: { job: JobRecord }) {
       return;
     }
     if (role === "seeker") {
+
+      // // user premium or not
+      // const premiumResult = await getPremiumUserId(user.id)
+      // console.log(premiumResult);
+
       // number of jobs applied by this user
       const countResult = await getApplicationsCount(`userId=${user.id}`);
       if (countResult.count >= 10) {

@@ -25,6 +25,8 @@ export type AuthFormData = {
 export type JobDataType = {
   title: string;
   company: string;
+  companyId?: string;
+  recruiterId: string;
   category: string;
   jobType: string;
   isRemote: boolean;

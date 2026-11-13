@@ -26,6 +26,7 @@ export default async function PaymentSuccessPage({ searchParams }:{ searchParams
   if (status === 'complete' && payment_status=='paid') {
     console.log({status, payment_status, customer_email, metadata, payment_intent});
     const result = await paymentVerify(session_id)
+    console.log(result);
     return (
       <section id="success">
         <p>

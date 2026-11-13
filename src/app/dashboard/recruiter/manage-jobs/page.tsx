@@ -4,14 +4,16 @@ import { Plus } from "lucide-react";
 import { requireRole } from "@/lib/require-role";
 import { getJobs } from "@/lib/api/jobs";
 import JobsTable from "./jobs-table";
+import { getServerSession } from "@/lib/core/server";
 
 export const metadata: Metadata = {
   title: "Manage Jobs — HireLoop",
 };
 
 export default async function ManageJobsPage() {
+  const session = await getServerSession()
   await requireRole("recruiter");
-  const jobs = await getJobs()
+  const jobs = await getJobs(`recruiterId=${session?.user.id}`)
 
   return (
     <div className="min-h-screen bg-[#090A0C] p-4 text-white md:p-8">
