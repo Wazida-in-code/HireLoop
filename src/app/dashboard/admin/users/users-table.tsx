@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Search, Users, X } from "lucide-react";
 import type { Role } from "@/lib/types";
+import { updateUserRole } from "@/lib/actions/applications";
 
 /** HireLoop's three roles, in declaration order from @/lib/types. */
 const ROLES: Role[] = ["seeker", "recruiter", "admin"];
@@ -81,8 +82,12 @@ export default function UsersTable({ users }: Props) {
   /** Switch one user to a different role. */
   // TODO: replace the state update with your role-update logic
   //       (e.g. auth.api.setRole or PATCH /users/:id/role).
-  const handleRoleChange = (userId: string, newRole: Role) => {
-    setRoleEdits((current) => ({ ...current, [userId]: newRole }));
+  const handleRoleChange = async (id: string, role: Role) => {
+    const result = await updateUserRole(id, role)
+    console.log(result);
+    if (result.modifiedCount > 0) {
+    setRoleEdits((prev) => ({...prev,[id]: role,}));
+  }
   };
 
   // TODO: implement the export when ready (e.g. build a CSV from `filtered`).

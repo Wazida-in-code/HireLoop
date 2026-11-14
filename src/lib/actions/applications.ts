@@ -11,3 +11,15 @@ export const updateApplicationStatus = async(id: string, data : {status: string}
     });
     return res.json();
 };
+
+
+export const updateUserRole = async(userId: string, role : "seeker" | "recruiter" | "admin") => {
+    const res = await fetch(`${BASE_URL}/users/${userId}/role`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({role}),
+    });
+    return res.json();
+};
