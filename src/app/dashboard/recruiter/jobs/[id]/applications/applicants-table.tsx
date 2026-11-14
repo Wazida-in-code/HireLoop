@@ -4,6 +4,7 @@ import { Fragment, useState } from "react";
 import { Search, Users, X } from "lucide-react";
 import { MetaLabel } from "@/components/job-ui";
 import type { ApplicationRecord, ApplicationStatus } from "@/lib/types";
+import { updateApplicationStatus } from "@/lib/actions/applications";
 
 /** Badge colours per application status (shared with the seeker table). */
 const statusStyles: Record<ApplicationStatus, string> = {
@@ -16,7 +17,23 @@ const statusStyles: Record<ApplicationStatus, string> = {
 };
 
 /** Statuses offered in the filter dropdown. */
-const STATUS_OPTIONS = ["All", "Applied", "Shortlisted", "Interview", "Rejected"];
+const STATUS_OPTIONS = [
+  "All",
+  "Applied",
+  "Shortlisted",
+  "Interview",
+  "Rejected",
+];
+
+/** Every status an application can be moved to (the full pipeline). */
+const ALL_STATUSES: ApplicationStatus[] = [
+  "Applied",
+  "Review",
+  "Shortlisted",
+  "Interview",
+  "Rejected",
+  "Offered",
+];
 
 const PANEL = "overflow-hidden rounded-xl border border-[#22252A] bg-[#121316]";
 const CELL = "px-5 py-4 align-top";
@@ -52,11 +69,30 @@ export default function ApplicantsTable({ applications }: Props) {
   const [status, setStatus] = useState("All");
   const [openId, setOpenId] = useState<string | null>(null);
 
+  // Status changes made in this table — local state only, not saved to the API.
+  const [statusEdits, setStatusEdits] = useState<
+    Record<string, ApplicationStatus>
+  >({});
+
+  /** Current status: the recruiter's edit if there is one, else the API value. */
+  const statusOf = (application: ApplicationRecord): ApplicationStatus =>
+    statusEdits[application._id] ?? application.status;
+
+  /** Move one application to a new status. */
+  const handleStatusChange = async(id: string, status: ApplicationStatus) => {
+    const result = await updateApplicationStatus(id, {status})
+    console.log(result);
+
+    if(result.modifiedCount > 0){
+      setStatusEdits((prev) => ({...prev,[id]: status,}));
+    }
+  };
+
   // Applications whose email matches the search box.
   const trimmed = query.trim().toLowerCase();
   const filtered = applications.filter((application) => {
     const matchesQuery = application.email.toLowerCase().includes(trimmed);
-    const matchesStatus = status === "All" || application.status === status;
+    const matchesStatus = status === "All" || statusOf(application) === status;
     return matchesQuery && matchesStatus;
   });
 
@@ -153,14 +189,37 @@ export default function ApplicantsTable({ applications }: Props) {
                       <td className={`${CELL} whitespace-nowrap text-gray-400`}>
                         {formatDate(application.appliedAt)}
                       </td>
+
+                      {/* Status: coloured dropdown that updates local state */}
                       <td className={`${CELL} whitespace-nowrap`}>
-                        <StatusBadge status={application.status} />
+                        <select
+                          value={statusOf(application)}
+                          onChange={(event) =>
+                            handleStatusChange(
+                              application._id,
+                              event.target.value as ApplicationStatus,
+                            )
+                          }
+                          aria-label={`Status for ${application.email}`}
+                          className={`cursor-pointer rounded-lg border border-[#22252A] px-2.5 py-1.5 text-xs font-medium outline-none transition focus:border-indigo-500 [&>option]:bg-[#121316] ${
+                            statusStyles[statusOf(application)]
+                          }`}
+                        >
+                          {ALL_STATUSES.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
                       </td>
+
                       <td className={`${CELL} text-right`}>
                         <button
                           onClick={() =>
                             setOpenId(
-                              openId === application._id ? null : application._id,
+                              openId === application._id
+                                ? null
+                                : application._id,
                             )
                           }
                           className="inline-flex items-center gap-1.5 rounded-lg border border-[#22252A] bg-[#1E2126] px-3 py-1.5 text-xs font-medium text-gray-300 transition hover:border-gray-500 hover:text-white"
@@ -196,7 +255,7 @@ export default function ApplicantsTable({ applications }: Props) {
                             <div>
                               <MetaLabel>Status</MetaLabel>
                               <span className="mt-1 inline-block">
-                                <StatusBadge status={application.status} />
+                                <StatusBadge status={statusOf(application)} />
                               </span>
                             </div>
                           </div>
