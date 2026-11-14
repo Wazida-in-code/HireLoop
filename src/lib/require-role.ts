@@ -17,8 +17,8 @@ export async function requireRole(role: Role) {
     redirect("/sign-in");
   }
 
-  if (session.user.role !== role) {
-    redirect(homeForRole(session.user.role));
+  if (session.user.userRole !== role) {
+    redirect(homeForRole(session.user.userRole));
   }
 
   return session;

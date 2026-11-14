@@ -14,7 +14,7 @@ export default function Navbar() {
   const closeMenu = () => setMenuOpen(false);
   const { data } = useSession();
   const user = data?.user;
-  const role = (user as { role?: Role } | undefined)?.role ?? "seeker";
+  const role = (user as { userRole?: Role } | undefined)?.userRole ?? "seeker";
 
   const links = [
     { label: "Browse Jobs", href: "/browse-jobs" },

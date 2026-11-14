@@ -17,7 +17,7 @@ export default function SignUpPage() {
             name: data.name as string,
             email: data.email as string,
             password: data.password as string,
-            role: data.role,
+            userRole: data.role,
             callbackURL: "/"
         };
         const {data: signUpResponse, error} = await signUp.email(body);

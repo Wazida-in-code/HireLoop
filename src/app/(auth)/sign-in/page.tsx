@@ -41,9 +41,9 @@ function SignInForm() {
         });
         console.log(signInResponse, error);
         if (error) return;
-        // The returned user's `role` isn't part of better-auth's client types,
-        // so read it off a widened view of the response.
-        const role = (signInResponse?.user as { role?: string } | undefined)?.role;
+        // The returned user's custom `userRole` isn't part of better-auth's client
+        // types, so read it off a widened view of the response.
+        const role = (signInResponse?.user as { userRole?: string } | undefined)?.userRole;
         router.push(homeForRole(role ?? "seeker"));
     };
 

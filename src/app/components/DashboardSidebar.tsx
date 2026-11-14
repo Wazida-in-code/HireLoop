@@ -70,7 +70,7 @@ const menuItemByRole: Record<Role, MenuItem[]> = {
 
 const DashboardSidebar = () => {
     const {data: session, isPending} = useSession();
-    const role = (session?.user as { role?: keyof typeof menuItemByRole } | undefined)?.role ?? "seeker";
+    const role = (session?.user as { userRole?: keyof typeof menuItemByRole } | undefined)?.userRole ?? "seeker";
   return (
     <Sidebar>
       <SidebarHeader />

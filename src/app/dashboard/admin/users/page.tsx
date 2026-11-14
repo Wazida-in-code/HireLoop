@@ -21,17 +21,22 @@ export default async function AdminUsersPage() {
 
   const { users } = await getUsers();
 
+  // `listUsers`' built-in type doesn't include our custom `userRole` field —
+  // widen the rows once so every check below can see it.
+  type Row = (typeof users)[number] & { userRole?: string };
+  const rows = users as Row[];
+
   /* ----- Numbers for the stat cards (all derived from the list above) ----- */
-  const total = users.length;
-  const active = users.filter((user) => !user.banned).length;
+  const total = rows.length;
+  const active = rows.filter((user) => !user.banned).length;
   const suspended = total - active;
 
-  const recruiters = users.filter((user) => user.role === "recruiter").length;
-  
-  const recruitersThisMonth = users.filter(
-    (user) => user.role === "recruiter" && ageInMs(user.createdAt) < 30 * DAY_MS,).length;
-  const signups24h = users.filter((user) => ageInMs(user.createdAt) < DAY_MS,).length;
-  const signupsYesterday = users.filter((user) => {
+  const recruiters = rows.filter((user) => user.userRole === "recruiter").length;
+
+  const recruitersThisMonth = rows.filter(
+    (user) => user.userRole === "recruiter" && ageInMs(user.createdAt) < 30 * DAY_MS,).length;
+  const signups24h = rows.filter((user) => ageInMs(user.createdAt) < DAY_MS,).length;
+  const signupsYesterday = rows.filter((user) => {
     const age = ageInMs(user.createdAt);
     return age >= DAY_MS && age < 2 * DAY_MS;}).length;
   const signupDiff = signups24h - signupsYesterday;
@@ -68,7 +73,7 @@ export default async function AdminUsersPage() {
 
         {/* Users table (search + role filter + export + role toggle) */}
         <div className="mt-6">
-          <UsersTable users={users} />
+          <UsersTable users={rows} />
         </div>
       </div>
     </div>

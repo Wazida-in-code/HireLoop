@@ -44,11 +44,11 @@ export type UserRow = {
   email: string;
   image?: string | null;
   createdAt: Date | string;
-  role?: string | null;
+  userRole?: string | null;
   banned?: boolean | null;
 };
 
-/** Better Auth stores role as a free string — narrow it to HireLoop's three roles. */
+/** Better Auth stores `userRole` as a free string — narrow it to HireLoop's three roles. */
 function toRole(value: string | null | undefined): Role {
   return value === "admin" || value === "recruiter" ? value : "seeker";
 }
@@ -77,7 +77,7 @@ export default function UsersTable({ users }: Props) {
 
   /** Current role: the admin's edit if there is one, else the stored role. */
   const roleOf = (user: UserRow): Role =>
-    roleEdits[user.id] ?? toRole(user.role);
+    roleEdits[user.id] ?? toRole(user.userRole);
 
   /** Switch one user to a different role. */
   // TODO: replace the state update with your role-update logic

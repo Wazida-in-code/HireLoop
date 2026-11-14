@@ -12,7 +12,7 @@ export default function JobActions({ job }: { job: JobRecord }) {
   const router = useRouter();
   const { data } = useSession();
   const user = data?.user;
-  const role = (user as { role?: Role } | undefined)?.role ?? "seeker";
+  const role = (user as { userRole?: Role } | undefined)?.userRole ?? "seeker";
   const handleApplyNow = async () => {
     if (!user) {
       router.push(`/sign-in?redirectTo=/browse-jobs/${job._id}`);
