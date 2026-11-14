@@ -20,13 +20,13 @@ export default function JobActions({ job }: { job: JobRecord }) {
     }
     if (role === "seeker") {
 
-      // // user premium or not
-      // const premiumResult = await getPremiumUserId(user.id)
-      // console.log(premiumResult);
+      // user premium or not
+      const premiumResult = await getPremiumUserId(user.id)
+      console.log(premiumResult);
 
       // number of jobs applied by this user
       const countResult = await getApplicationsCount(`userId=${user.id}`);
-      if (countResult.count >= 10) {
+      if (!premiumResult.premium && countResult.count >= 2) {
         router.push('/payment')
         return;
       } else {
