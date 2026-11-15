@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { CategoryTile, CompanyBlock, TypePill } from "@/components/job-ui";
 import { getApplications } from "@/lib/api/applications";
@@ -47,9 +47,12 @@ export default async function JobApplicationsPage({ params }: Props) {
   // Only the applications that belong to this job.
   const applications = await getApplications(`jobId=${id}`);
 
+  if(!Array.isArray(applications)){
+    redirect('/unauthorized')
+  }
   // How many applications are in each status (drives the stat cards).
   const countBy = (status: ApplicationStatus) =>
-    applications.filter((application) => application.status === status).length;
+    applications?.filter((application) => application.status === status).length;
 
   return (
     <div className="min-h-screen bg-[#090A0C] p-4 text-white md:p-8">
