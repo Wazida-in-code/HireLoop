@@ -1,4 +1,6 @@
+'use server'
 import type { ApplicationRecord, ApplicationStatus } from "@/lib/types";
+import { authFetch } from "../core/server";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"
 
@@ -9,7 +11,8 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"
  * page always has something to render instead of crashing.
  */
 export const getApplications = async (query = "" ): Promise<ApplicationRecord[]> => {
-    const res = await fetch(`${BASE_URL}/applications?${query}`)
+    const api = `${BASE_URL}/applications?${query}`
+    const res = await authFetch(api)
     return res.json()
 }
 
