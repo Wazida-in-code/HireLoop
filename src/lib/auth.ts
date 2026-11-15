@@ -30,6 +30,20 @@ user: {
     plugins: [
       admin(),
     ],
+
+    // Keep Better Auth's own `role` field (read by the admin plugin's API
+    // gates, e.g. listUsers) mirrored from our `userRole` whenever an account
+    // is created — so sign-ups as admin actually pass those gates.
+    databaseHooks: {
+      user: {
+        create: {
+          before: async (user) => ({
+            data: { ...user, role: (user.userRole as string | undefined) ?? "seeker" },
+          }),
+        },
+      },
+    },
+
   database: mongodbAdapter(db, {
     client,
   }),
