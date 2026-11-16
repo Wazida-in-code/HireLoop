@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { requireRole } from "@/lib/require-role";
 import UserStats, { type UserStatsData } from "./user-stats";
 import UsersTable from "./users-table";
-import { getUsers } from "@/lib/api/admin-users";
+import { getUsers } from "@/lib/api/user";
 
 export const metadata: Metadata = {
   title: "User Management — HireLoop",
@@ -19,7 +19,7 @@ function ageInMs(createdAt: Date | string): number {
 export default async function AdminUsersPage() {
   await requireRole("admin");
 
-  const { users } = await getUsers();
+  const  users  = await getUsers();
 
   // `listUsers`' built-in type doesn't include our custom `userRole` field —
   // widen the rows once so every check below can see it.
@@ -28,9 +28,8 @@ export default async function AdminUsersPage() {
 
   /* ----- Numbers for the stat cards (all derived from the list above) ----- */
   const total = rows.length;
-  const active = rows.filter((user) => !user.banned).length;
-  const suspended = total - active;
-
+  const active = total;
+  const suspended = 0;
   const recruiters = rows.filter((user) => user.userRole === "recruiter").length;
 
   const recruitersThisMonth = rows.filter(

@@ -39,7 +39,7 @@ const TH = "px-5 py-4 font-medium";
  * A structural subset — the page passes `getUsers()` rows straight through.
  */
 export type UserRow = {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   image?: string | null;
@@ -77,7 +77,7 @@ export default function UsersTable({ users }: Props) {
 
   /** Current role: the admin's edit if there is one, else the stored role. */
   const roleOf = (user: UserRow): Role =>
-    roleEdits[user.id] ?? toRole(user.userRole);
+    roleEdits[user._id] ?? toRole(user.userRole);
 
   /** Switch one user to a different role. */
   // TODO: replace the state update with your role-update logic
@@ -204,7 +204,7 @@ export default function UsersTable({ users }: Props) {
 
                   return (
                     <tr
-                      key={user.id}
+                      key={user._id}
                       className="border-b border-[#22252A] transition-colors last:border-0 hover:bg-[#16181D]"
                     >
                       {/* User name + avatar (photo when linked, else initials) */}
@@ -272,7 +272,7 @@ export default function UsersTable({ users }: Props) {
                                 key={role}
                                 type="button"
                                 disabled={isActive}
-                                onClick={() => handleRoleChange(user.id, role)}
+                                onClick={() => handleRoleChange(user._id, role)}
                                 aria-label={`Make ${user.name} ${roleLabel[role]}`}
                                 title={
                                   isActive
