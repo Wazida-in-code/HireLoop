@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import Link from "next/link";
-import { Briefcase, Eye, EyeOff, ShieldCheck, User } from "lucide-react";
+import { Briefcase, Eye, EyeOff, User } from "lucide-react";
 import type { AuthFormData, AuthMode } from "@/lib/types";
 
 type Field = {
@@ -60,22 +60,46 @@ const fieldsByMode: Record<AuthMode, Field[]> = {
   ],
 };
 
+// Roles a visitor can pick when signing up (Admin is not self-serve).
 const roles = [
   { value: "seeker", label: "Job Seeker", icon: User },
   { value: "recruiter", label: "Recruiter", icon: Briefcase },
-  { value: "admin", label: "Admin", icon: ShieldCheck },
 ] as const;
 
 export default function AuthForm({ mode , onSubmit}: AuthFormDataProps) {
   const isSignIn = mode === "sign-in";
   const [showPassword, setShowPassword] = useState(false);
+  // const [imageFile, setImageFile] = useState<File | null>(null);
+  // const [imgUrl, setImgUrl] = useState<string>("");
+
+  // async function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
+  //   const file = event.target.files?.[0] ?? null;
+  //   setImageFile(file);
+
+  //   if(!file) return
+
+  //   const formData = new FormData()
+  //   formData.append('image', file)
+
+  //   const imgbbApi = `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`
+
+  //   const res = await fetch(imgbbApi, {
+  //     method: "POST",
+  //     body: formData,
+  //   })
+
+  //   const result = await res.json()
+  //   console.log(result);
+  //   setImgUrl(result?.data?.url ?? "");
+  // }
 
   // Delegates to the page-provided onSubmit handler (better-auth calls live there).
  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData.entries()) as AuthFormData 
-    await onSubmit(data)
+    // Add the uploaded image URL from state, so the page's onSubmit can use it.
+    // await onSubmit({ ...data, imageUrl: imgUrl })
   }
 
   const tabClass = (active: boolean) =>
@@ -162,12 +186,37 @@ export default function AuthForm({ mode , onSubmit}: AuthFormDataProps) {
             </div>
           ))}
 
+          {/* {!isSignIn && (
+            <div>
+              <label
+                htmlFor="image"
+                className="block text-sm font-medium text-white/70"
+              >
+                Profile image{" "}
+                <span className="text-white/40">(optional)</span>
+              </label>
+              <input
+                id="image"
+                name="image"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="mt-1.5 block w-full rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white/70 file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-[#5b50e6] file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-white"
+              />
+              {imageFile && (
+                <p className="mt-1.5 text-xs text-white/50">
+                  Selected: {imageFile.name}
+                </p>
+              )}
+            </div>
+          )} */}
+
           {!isSignIn && (
             <fieldset className="w-full">
               <legend className="text-sm font-medium text-white/70">
                 I am a…
               </legend>
-              <div className="mt-1.5 grid grid-cols-3 gap-2">
+              <div className="mt-1.5 grid grid-cols-2 gap-2">
                 {roles.map(({ value, label, icon: Icon }) => (
                   <label key={value} className="cursor-pointer">
                     <input

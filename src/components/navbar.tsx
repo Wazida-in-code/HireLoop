@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, User, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/app/images/logo.png";
 import { authClient, useSession } from "@/lib/auth-client";
@@ -15,6 +15,12 @@ export default function Navbar() {
   const { data } = useSession();
   const user = data?.user;
   const role = (user as { userRole?: Role } | undefined)?.userRole ?? "seeker";
+  // Profile picture: better-auth stores it as `image`, other APIs may call it
+  // `imageUrl` — we check both. If neither exists, <Avatar> shows a placeholder.
+  // const userImage =
+  //   user?.image ??
+  //   (user as { imageUrl?: string | null } | undefined)?.imageUrl ??
+  //   null;
 
   const links = [
     { label: "Browse Jobs", href: "/browse-jobs" },
@@ -57,9 +63,10 @@ export default function Navbar() {
               </nav>
           {user ? (
             <>
+              {/* <Avatar src={userImage} name={user.name} />
               <p className="text-lg font-bold tracking-tight text-white">
                 {user.name}
-              </p>
+              </p> */}
 
               <button
                 onClick={handleSignOut}
@@ -122,6 +129,7 @@ export default function Navbar() {
           </div>
           {user ? (
             <div className="mt-3 flex flex-col items-center gap-3 border-t border-white/10 pt-3">
+              {/* <Avatar src={userImage} name={user.name} /> */}
               <p className="max-w-full break-words text-center text-base font-bold text-white">
                 {user.name}
               </p>
@@ -154,5 +162,34 @@ export default function Navbar() {
         </nav>
       )}
     </header>
+  );
+}
+
+/**
+ * The user's profile picture in the navbar.
+ * - `src` has a URL  -> show the photo
+ * - `src` is empty   -> show a placeholder icon
+ */
+function Avatar({ src, name }: { src?: string | null; name: string }) {
+  if (src) {
+    return (
+      <Image
+        src={src}
+        alt={`${name} avatar`}
+        width={36}
+        height={36}
+        unoptimized
+        className="h-9 w-9 shrink-0 rounded-full object-cover"
+      />
+    );
+  }
+
+  return (
+    <span
+      aria-label={`${name} (no profile image)`}
+      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-white"
+    >
+      <User className="h-5 w-5" aria-hidden="true" />
+    </span>
   );
 }

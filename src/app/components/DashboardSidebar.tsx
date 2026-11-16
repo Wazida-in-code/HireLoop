@@ -22,6 +22,7 @@ import {
   ClipboardList,
   FileText,
   Flag,
+  House,
   LayoutDashboard,
   MessageSquare,
   PlusCircle,
@@ -39,8 +40,10 @@ type MenuItem = {
   icon: LucideIcon;
 };
 
+// "Home" is the same link for every role, so it goes in all three lists.
 const menuItemByRole: Record<Role, MenuItem[]> = {
   seeker: [
+    { id: "home", name: "Home", url: "/", icon: House },
     { id: "dashboard", name: "Dashboard", url: "/dashboard/seeker", icon: LayoutDashboard },
     { id: "find-jobs", name: "Find Jobs", url: "/dashboard/seeker/jobs", icon: Search },
     { id: "applications", name: "My Applications", url: "/dashboard/seeker/my-applications", icon: ClipboardList },
@@ -51,6 +54,7 @@ const menuItemByRole: Record<Role, MenuItem[]> = {
     { id: "settings", name: "Settings", url: "/dashboard/seeker/settings", icon: Settings },
   ],
   recruiter: [
+    { id: "home", name: "Home", url: "/", icon: House },
     { id: "dashboard", name: "Dashboard", url: "/dashboard/recruiter", icon: LayoutDashboard },
     { id: "manage-jobs", name: "Manage Jobs", url: "/dashboard/recruiter/manage-jobs", icon: Briefcase },
     { id: "add-jobs", name: "Add Jobs", url: "/dashboard/recruiter/jobs", icon: PlusCircle },
@@ -58,6 +62,7 @@ const menuItemByRole: Record<Role, MenuItem[]> = {
     { id: "settings", name: "Settings", url: "/dashboard/recruiter/settings", icon: Settings },
   ],
   admin: [
+    { id: "home", name: "Home", url: "/", icon: House },
     { id: "admin-dashboard", name: "Dashboard", url: "/dashboard/admin", icon: LayoutDashboard },
     { id: "admin-users", name: "Users", url: "/dashboard/admin/users", icon: Users },
     { id: "admin-jobs", name: "Jobs", url: "/dashboard/admin/jobs", icon: Briefcase },
@@ -73,7 +78,17 @@ const DashboardSidebar = () => {
     const role = (session?.user as { userRole?: keyof typeof menuItemByRole } | undefined)?.userRole ?? "seeker";
   return (
     <Sidebar>
-      <SidebarHeader />
+      {/* Header: shows the signed-in user's name and role */}
+      <SidebarHeader className="bg-blue-950">
+        <div className="px-3 py-2">
+          <p className="truncate text-base font-bold text-white">
+            {session?.user.name ?? "…"}
+          </p>
+          <p className="text-sm capitalize text-white/60">
+            {session ? role : "…"}
+          </p>
+        </div>
+      </SidebarHeader>
       <SidebarContent className="bg-blue-950 text-white">
         <SidebarGroup />
         <SidebarGroup />
