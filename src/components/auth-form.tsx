@@ -69,29 +69,29 @@ const roles = [
 export default function AuthForm({ mode , onSubmit}: AuthFormDataProps) {
   const isSignIn = mode === "sign-in";
   const [showPassword, setShowPassword] = useState(false);
-  // const [imageFile, setImageFile] = useState<File | null>(null);
-  // const [imgUrl, setImgUrl] = useState<string>("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imgUrl, setImgUrl] = useState<string>("");
 
-  // async function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
-  //   const file = event.target.files?.[0] ?? null;
-  //   setImageFile(file);
+  async function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null;
+    setImageFile(file);
 
-  //   if(!file) return
+    if(!file) return
 
-  //   const formData = new FormData()
-  //   formData.append('image', file)
+    const formData = new FormData()
+    formData.append('image', file)
 
-  //   const imgbbApi = `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`
+    const imgbbApi = `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`
 
-  //   const res = await fetch(imgbbApi, {
-  //     method: "POST",
-  //     body: formData,
-  //   })
+    const res = await fetch(imgbbApi, {
+      method: "POST",
+      body: formData,
+    })
 
-  //   const result = await res.json()
-  //   console.log(result);
-  //   setImgUrl(result?.data?.url ?? "");
-  // }
+    const result = await res.json()
+    console.log(result);
+    setImgUrl(result?.data?.url ?? "");
+  }
 
   // Delegates to the page-provided onSubmit handler (better-auth calls live there).
  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -99,7 +99,7 @@ export default function AuthForm({ mode , onSubmit}: AuthFormDataProps) {
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData.entries()) as AuthFormData 
     // Add the uploaded image URL from state, so the page's onSubmit can use it.
-    // await onSubmit({ ...data, imageUrl: imgUrl })
+    await onSubmit({ ...data, imageUrl: imgUrl })
   }
 
   const tabClass = (active: boolean) =>
@@ -186,7 +186,7 @@ export default function AuthForm({ mode , onSubmit}: AuthFormDataProps) {
             </div>
           ))}
 
-          {/* {!isSignIn && (
+          {!isSignIn && (
             <div>
               <label
                 htmlFor="image"
@@ -209,7 +209,7 @@ export default function AuthForm({ mode , onSubmit}: AuthFormDataProps) {
                 </p>
               )}
             </div>
-          )} */}
+          )}
 
           {!isSignIn && (
             <fieldset className="w-full">

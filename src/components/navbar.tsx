@@ -17,10 +17,10 @@ export default function Navbar() {
   const role = (user as { userRole?: Role } | undefined)?.userRole ?? "seeker";
   // Profile picture: better-auth stores it as `image`, other APIs may call it
   // `imageUrl` — we check both. If neither exists, <Avatar> shows a placeholder.
-  // const userImage =
-  //   user?.image ??
-  //   (user as { imageUrl?: string | null } | undefined)?.imageUrl ??
-  //   null;
+  const userImage =
+    user?.image ??
+    (user as { imageUrl?: string | null } | undefined)?.imageUrl ??
+    null;
 
   const links = [
     { label: "Browse Jobs", href: "/browse-jobs" },
@@ -63,10 +63,10 @@ export default function Navbar() {
               </nav>
           {user ? (
             <>
-              {/* <Avatar src={userImage} name={user.name} />
+              <Avatar src={userImage} name={user.name} />
               <p className="text-lg font-bold tracking-tight text-white">
                 {user.name}
-              </p> */}
+              </p>
 
               <button
                 onClick={handleSignOut}
@@ -129,7 +129,7 @@ export default function Navbar() {
           </div>
           {user ? (
             <div className="mt-3 flex flex-col items-center gap-3 border-t border-white/10 pt-3">
-              {/* <Avatar src={userImage} name={user.name} /> */}
+              <Avatar src={userImage} name={user.name} />
               <p className="max-w-full break-words text-center text-base font-bold text-white">
                 {user.name}
               </p>

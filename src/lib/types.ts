@@ -17,10 +17,10 @@ export type AuthFormData = {
   email: string;
   password: string;
   role?: Role;
-  // /** Profile image picked on sign-up. Only stored client-side for now — uploading is not wired up yet. */
-  // image?: File;
-  // /** Public URL of the uploaded profile image (empty string until the upload finishes). */
-  // imageUrl?: string;
+  /** Profile image picked on sign-up. Only stored client-side for now — uploading is not wired up yet. */
+  image?: File;
+  /** Public URL of the uploaded profile image (empty string until the upload finishes). */
+  imageUrl?: string;
 };
 
 /* ---------- Jobs ---------- */
