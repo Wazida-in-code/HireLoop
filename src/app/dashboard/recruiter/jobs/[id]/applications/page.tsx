@@ -47,9 +47,9 @@ export default async function JobApplicationsPage({ params }: Props) {
   // Only the applications that belong to this job.
   const applications = await getApplications(`jobId=${id}`);
 
-  if(!Array.isArray(applications)){
-    redirect('/unauthorized')
-  }
+  // if(!Array.isArray(applications)){
+  //   redirect('/unauthorized')
+  // }
   // How many applications are in each status (drives the stat cards).
   const countBy = (status: ApplicationStatus) =>
     applications?.filter((application) => application.status === status).length;
