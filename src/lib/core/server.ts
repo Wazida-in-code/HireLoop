@@ -1,9 +1,10 @@
+import "server-only";
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation";
 
 export const getServerSession = async () => {
-    "use server";
+    // "use server";
     const session = await auth.api.getSession({
         headers: await headers()
     })
@@ -35,6 +36,20 @@ export const authFetch = async(api: string) => {
         headers: {
             authorization: `Bearer ${token}`
         }
+    })
+    return res;
+}
+
+
+export const protectedMutation = async(api: string, method: string, data?: unknown) =>{
+    const token = await getToken();
+    const res = await fetch(api, {
+        method: method, 
+        headers: {
+            'content-type' : 'application/json',
+            authorization: `Bearer ${token}`
+        },
+        body: data ? JSON.stringify(data) : null
     })
     return res;
 }
