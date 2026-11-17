@@ -3,9 +3,9 @@ import DashboardSidebar from "../components/DashboardSidebar";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     return (
-    <SidebarProvider className="bg-blue-950">
+    <SidebarProvider className="striped-dark">
       <DashboardSidebar />
-      <main>
+      <main className="flex-1 min-w-0">
         <SidebarTrigger className="text-white" />
         {children}
       </main>

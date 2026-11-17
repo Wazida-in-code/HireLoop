@@ -79,7 +79,7 @@ const DashboardSidebar = () => {
   return (
     <Sidebar>
       {/* Header: shows the signed-in user's name and role */}
-      <SidebarHeader className="bg-blue-950">
+      <SidebarHeader className="striped-dark">
         <div className="px-3 py-2">
           <p className="truncate text-base font-bold text-white">
             {session?.user.name ?? "…"}
@@ -89,7 +89,7 @@ const DashboardSidebar = () => {
           </p>
         </div>
       </SidebarHeader>
-      <SidebarContent className="bg-blue-950 text-white">
+      <SidebarContent className="striped-dark text-white">
         <SidebarGroup />
         <SidebarGroup />
         <SidebarGroup>
@@ -105,7 +105,7 @@ const DashboardSidebar = () => {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarFooter className="striped-dark" />
     </Sidebar>
   );
 };
