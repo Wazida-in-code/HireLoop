@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import Navbar from "@/components/navbar";
 import { Skeleton } from "@/components/ui/skeleton";
 import JobDetails from "./job-details";
 
@@ -20,7 +19,6 @@ type Props = {
 export default function JobDetailsPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-[#090A0C] text-white">
-      <Navbar />
       <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6">
         <Suspense fallback={<JobDetailsSkeleton />}>
           <JobDetails params={params} />

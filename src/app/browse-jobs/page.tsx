@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/navbar";
 import { getJobs } from "@/lib/api/jobs";
 import BrowseJobs from "./browse-jobs";
 
@@ -20,7 +19,6 @@ export default async function BrowseJobsPage({ searchParams }: Props) {
 
   return (
     <div className="min-h-screen bg-[#090A0C] text-white">
-      <Navbar />
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6">
         <BrowseJobs jobs={jobs} initialQuery={initialQuery} />
       </div>

@@ -8,7 +8,6 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
-import Navbar from "@/components/navbar";
 import PaymentButton from "./paymentButton";
 
 export const metadata: Metadata = {
@@ -58,8 +57,6 @@ export default async function PaymentPage({
   }
   return (
     <>
-      <Navbar />
-
       <div className="min-h-screen bg-[#090A0C] px-4 py-10 text-white sm:px-6">
         <div className="mx-auto max-w-5xl">
           <Link

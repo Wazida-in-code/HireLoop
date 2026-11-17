@@ -49,7 +49,7 @@ export const protectedMutation = async(api: string, method: string, data?: unkno
     const res = await fetch(api, {
         method: method, 
         headers: {
-            'content-type' : 'application/json',
+            'Content-Type' : 'application/json',
             authorization: `Bearer ${token}`
         },
         body: data ? JSON.stringify(data) : null
